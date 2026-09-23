@@ -31,7 +31,7 @@ never leaves HA.
 
 Tesla requires it at exactly:
 
-    https://h173an.com/.well-known/appspecific/com.tesla.3p.public-key.pem
+    https://tesla.h173an.com/.well-known/appspecific/com.tesla.3p.public-key.pem
 
 and the root domain must match the Allowed Origin set on the application at
 developer.tesla.com.
@@ -39,7 +39,7 @@ developer.tesla.com.
 Verify a deploy end to end — reachable, parseable, and matching HA's private
 key — with:
 
-    ../homeassistant-powerwall/fleet/verify.sh h173an.com
+    ../homeassistant-powerwall/fleet/verify.sh tesla.h173an.com
 
 ## DNS
 
