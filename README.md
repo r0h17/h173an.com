@@ -41,21 +41,31 @@ key — with:
 
     ../homeassistant-powerwall/fleet/verify.sh tesla.h173an.com
 
-## DNS
+## DNS — use the subdomain, not the apex
 
-Apex `h173an.com` at Squarespace:
+One record, at Squarespace:
 
-| type | value |
-|---|---|
-| A | 185.199.108.153 |
-| A | 185.199.109.153 |
-| A | 185.199.110.153 |
-| A | 185.199.111.153 |
-| AAAA | 2606:50c0:8000::153 |
-| AAAA | 2606:50c0:8001::153 |
-| AAAA | 2606:50c0:8002::153 |
-| AAAA | 2606:50c0:8003::153 |
+| type | host | value |
+|---|---|---|
+| CNAME | `tesla` | `r0h17.github.io` |
 
-Then Settings → Pages → Custom domain `h173an.com` → **Enforce HTTPS** (the
-checkbox can take up to 24h to become available while the certificate is
-issued). Tesla will not accept the key over plain HTTP.
+Then Settings → Pages → Custom domain `tesla.h173an.com` → **Enforce HTTPS**
+(the checkbox can take up to 24h to become available while the certificate
+is issued). Tesla will not accept the key over plain HTTP.
+
+### Why not the apex
+
+Squarespace would not publish custom `A` records on `@`. All four GitHub
+IPs were saved in the DNS UI, but the authoritative nameservers kept
+answering with the Squarespace parking IP `185.149.22.187` for minutes
+afterwards. The `AAAA` records published instantly, so this is a locked
+default `A` record on the apex, not propagation lag.
+
+CNAMEs publish on this zone without trouble, and pointing a subdomain at
+`<user>.github.io` is GitHub's recommended setup anyway. The leftover apex
+`A`/`AAAA` records are inert — nothing claims `h173an.com` on Pages — and
+can be cleaned up whenever.
+
+Tesla is fine with this: HA's config flow asks for "the domain name you
+intend to host your public key on", which "should be the same or a
+subdomain of your origin domain". Origin stays `https://h173an.com`.
